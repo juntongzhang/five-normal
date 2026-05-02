@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>举孝廉·儒家五常测试</title>
+    <style>
+        :root {
+            --primary: #111111;
+            --primary-light: #2a2a2a;
+            --accent: #821c1c; 
+            --accent-fade: rgba(130, 28, 28, 0.08);
+            --bronze: #63543d;
+            --bronze-dark: #473a28;
+            --bg-base: #f0ece3;
+            --text-main: #222222;
+            --text-sub: #444444;
+            --border: #bfb6a5;
+            --font-serif: "KaiTi", "STKaiti", "Baskerville", "Georgia", "Songti SC", serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-serif);
+            background: var(--bg-base);
+            background-image: url("data:image/svg+xml,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
+            color: var(--text-main);
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            min-height: 100vh;
+            background: rgba(247, 245, 240, 0.92);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            margin: 0 auto;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.08);
+        }
+
+        .fade-in { animation: fadeIn 0.8s ease-out forwards; }
+        .slide-up { animation: slideUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes pulse { 0% { transform: scale(1); opacity:0.5; } 50% { transform: scale(1.05); opacity:0.8; } 100% { transform: scale(1); opacity:0.5; } }
+
+        /* ---------------- 封面 ---------------- */
+        #page-intro {
+            padding: 50px 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bg-watermark {
+            position: absolute;
+            font-size: 200px;
+            color: rgba(99, 84, 61, 0.05);
+            font-weight: bold;
+            z-index: 0;
+            pointer-events: none;
+            writing-mode: vertical-rl;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: "Songti SC", serif;
+        }
+
+        .intro-seal {
+            width: 70px; height: 70px;
+            border: 2px solid var(--accent);
+            color: var(--accent);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 28px;
+            margin-bottom: 25px;
+            border-radius: 2px;
+            background: transparent;
+            position: relative;
+        }
+
+        .intro-title {
+            font-size: 42px;
+            margin: 0 0 15px;
+            font-weight: bold;
+            letter-spacing: 4px;
+            z-index: 1;
+            color: var(--primary);
+        }
+        .intro-sub {
+            font-size: 18px;
+            color: var(--text-sub);
+            line-height: 2.0;
+            margin-bottom: 50px;
+            z-index: 1;
+        }
+
+        .btn-start {
+            background: var(--primary);
+            color: #fff;
+            border: 1px solid var(--primary-light);
+            padding: 15px 40px;
+            font-size: 20px;
+            font-family: var(--font-serif);
+            letter-spacing: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            z-index: 1;
+        }
+        .btn-start:active { transform: scale(0.96); background: #000; }
+
+        /* ---------------- 测试页 ---------------- */
+        #page-test {
+            display: none;
+            flex-direction: column;
+            padding: 25px 20px;
+            min-height: 100vh;
+        }
+
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            font-size: 16px;
+            color: var(--bronze-dark);
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 3px;
+            background: var(--border);
+            margin-bottom: 30px;
+            position: relative;
+        }
+        .progress-fill {
+            height: 100%;
+            background: var(--accent);
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        .q-content { flex: 1; display: flex; flex-direction: column; }
+        
+        .q-text {
+            font-size: 20px;
+            line-height: 1.7;
+            margin-bottom: 30px;
+            color: var(--text-main);
+            min-height: 80px;
+            text-align: justify;
+            font-weight: bold;
+        }
+
+        .options-list { display: flex; flex-direction: column; gap: 14px; }
+
+        .opt-btn {
+            background: rgba(255,255,255,0.4);
+            border: 1px solid var(--border);
+            padding: 16px 18px;
+            font-size: 17px;
+            color: var(--text-main);
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s;
+            display: flex;
+            align-items: flex-start;
+            line-height: 1.6;
+            position: relative;
+        }
+        .opt-btn:hover { border-color: var(--bronze); background: rgba(99, 84, 61, 0.05); }
+        .opt-btn:active { background: rgba(99, 84, 61, 0.1); transform: scale(0.99); }
+        
+        .opt-prefix { 
+            color: var(--accent); 
+            margin-right: 10px; 
+            font-family: "Georgia", serif;
+            font-size: 19px;
+            font-weight: bold;
+        }
+
+        .nav-btns {
+            margin-top: auto;
+            padding-top: 25px;
+            display: flex;
+            justify-content: center;
+        }
+        .btn-back {
+            background: none; border: none;
+            color: var(--bronze-dark);
+            font-size: 16px;
+            cursor: pointer;
+            text-decoration: underline;
+            font-family: var(--font-serif);
+        }
+
+        /* ---------------- 结果页 ---------------- */
+        #page-result {
+            display: none;
+            background: var(--bg-base);
+            min-height: 100vh;
+            padding-bottom: 60px;
+        }
+
+        .res-header {
+            background: #0d0d0d; 
+            padding: 45px 20px 35px;
+            text-align: center;
+            border-bottom: 4px solid var(--accent);
+            color: #fff;
+        }
+        
+        .res-title { 
+            font-size: 48px; 
+            margin: 0 0 10px; 
+            color: #fff; 
+            letter-spacing: 4px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.6);
+        }
+        .res-subtitle { font-size: 16px; color: #bcaea0; letter-spacing: 2px; margin-bottom: 25px;}
+        
+        .res-quote {
+            font-size: 19px;
+            color: #e9e3d3;
+            padding: 18px 10px;
+            border-top: 1px dashed #544b3d;
+            border-bottom: 1px dashed #544b3d;
+            line-height: 1.6;
+        }
+
+        .card {
+            background: rgba(255,255,255,0.75);
+            margin: 25px 15px 0;
+            padding: 30px 20px;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        }
+        .card-title {
+            font-size: 22px;
+            text-align: center;
+            margin-bottom: 25px;
+            color: var(--primary);
+            position: relative;
+            letter-spacing: 3px;
+            font-weight: bold;
+        }
+        .card-title::after {
+            content:''; display:block; width:40px; height:2px; background:var(--accent); margin: 10px auto 0;
+        }
+
+        .desc-text {
+            font-size: 18px;
+            line-height: 1.9;
+            color: var(--primary-light);
+            text-align: justify;
+        }
+        
+        .lore-box {
+            margin-top: 25px;
+            background: rgba(130, 28, 28, 0.04);
+            padding: 20px;
+            border-left: 4px solid var(--accent);
+        }
+        .lore-title { font-weight: bold; color: var(--primary); font-size: 19px; margin-bottom: 15px; letter-spacing: 1px;}
+        
+        .figure-item { margin-bottom: 18px; }
+        .figure-item:last-child { margin-bottom: 0; }
+        .figure-name { 
+            font-weight: bold; 
+            color: #fff; 
+            background: var(--accent); 
+            padding: 4px 10px;
+            border-radius: 2px;
+            font-size: 22px; /* 放大人物名称 */
+            margin-right: 8px; 
+            display: inline-block;
+            letter-spacing: 1px;
+        }
+        .figure-bio { font-size: 17px; line-height: 1.8; color: var(--text-sub); text-align: justify; display: block; margin-top: 8px; }
+
+        .wuchang-item { margin-bottom: 25px; border-bottom: 1px dashed var(--border); padding-bottom: 20px; }
+        .wuchang-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0;}
+        .wc-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;}
+        .wc-name { 
+            font-size: 26px; /* 放大维度名称 */
+            font-weight: bold; 
+            color: var(--primary); 
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 4px;
+        }
+        .wc-bar-bg { flex: 1; height: 8px; background: #e0d8c8; margin: 0 20px; border-radius: 4px; position: relative; }
+        .wc-bar-fill { height: 100%; background: var(--bronze); border-radius: 4px; }
+        .wc-quote { font-size: 16px; color: var(--primary-light); font-weight: bold; margin-bottom: 8px; }
+        .wc-desc { font-size: 16px; color: var(--text-sub); line-height: 1.7; text-align: justify; }
+
+        #page-loading {
+            display: none; height: 100vh; flex-direction: column; justify-content: center; align-items: center;
+        }
+        .ink-dot {
+            width: 24px; height: 24px; background: var(--primary); transform: rotate(45deg);
+            animation: pulse 1s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body>
+
+<div id="page-intro" class="container">
+    <div class="bg-watermark">察举</div>
+    <div class="intro-seal">孝廉</div>
+    <h1 class="intro-title">举孝廉<br><span style="font-size:22px; display:block; margin-top:12px; color:var(--text-sub); font-weight:normal;">儒家五常测试</span></h1>
+    <p class="intro-sub" style="text-align: justify; padding: 0 15px;">
+        岁寒，然后知松柏之后凋也。<br><br>
+        在这纷扰世间，有人执剑入局，顺势而为；有人提灯逆行，独守清明。面对利益、权势与大义，你的每一次抉择，都在丈量内心的山河。
+    </p>
+    <button class="btn-start" onclick="startTest()">始察</button>
+</div>
+
+<div id="page-test" class="container">
+    <div class="status-bar">
+        <span id="q-counter">01 / 20</span>
+        <span id="q-dim-label">【 仁 】</span>
+    </div>
+    <div class="progress-container">
+        <div class="progress-fill" id="progress-bar"></div>
+    </div>
+    <div class="q-content" id="q-box">
+        <div class="q-text" id="q-text">加载中...</div>
+        <div class="options-list" id="opt-list"></div>
+    </div>
+    <div class="nav-btns">
+        <button class="btn-back" id="btn-back" onclick="prevQ()">修改前言</button>
+    </div>
+</div>
+
+<div id="page-loading" class="container">
+    <div class="ink-dot"></div>
+    <p style="margin-top:30px; letter-spacing:3px; color:var(--text-main); font-size: 18px; font-weight: bold;">溯源经史，推演气度...</p>
+</div>
+
+<div id="page-result" class="container">
+    <div class="res-header">
+        <h2 class="res-title" id="res-name">...</h2>
+        <div class="res-subtitle" id="res-archetype-tags">...</div>
+        <div class="res-quote" id="res-slogan">...</div>
+        <button class="btn-start" style="margin-top:25px; font-size:16px; padding:12px 30px; background: transparent; color: #fff; border: 1px solid #bcaea0;" onclick="location.reload()">重新推演</button>
+    </div>
+
+    <div class="card fade-in" style="animation-delay: 0.1s;">
+        <div class="card-title">五常分野</div>
+        <canvas id="radarChart" width="300" height="260" style="width:100%;"></canvas>
+    </div>
+
+    <div class="card fade-in" style="animation-delay: 0.15s;">
+        <div class="card-title">气度品评</div>
+        <div class="desc-text" id="res-desc"></div>
+        <div class="lore-box" id="res-lore-box"></div>
+    </div>
+    
+    <div class="card fade-in" style="animation-delay: 0.2s;">
+        <div class="card-title">五常之辨</div>
+        <div id="wuchang-container"></div>
+    </div>
+</div>
+
+<script>
+const dimNames = ["仁 (慈爱)", "义 (公正)", "礼 (恭敬)", "智 (明辨)", "信 (诚实)"];
+const dimLabels = ["仁", "义", "礼", "智", "信"];
+
+const wuchangTexts = [
+    {
+        name: "仁", 
+        quote_high: "《孟子》言：恻隐之心，仁之端也。", 
+        desc_high: "你抱有深厚的同理心。在制度与效率面前，你倾向于看见具体的人。你认为政策与事功的最终目的，不能脱离对个体境遇的体恤与关怀。",
+        quote_low: "《老子》言：天地不仁，以万物为刍狗。",
+        desc_low: "你具备冷静的大局观。在面对系统运转时，你能克制情绪的干扰。你倾向于通过理性的资源配置和结果导向来解决实际问题，而非停留在感性层面。"
+    },
+    {
+        name: "义", 
+        quote_high: "《论语》言：君子喻于义，见利思义。", 
+        desc_high: "你行事追求公道与合宜。面对利益抉择时，你更看重手段的正当性。你认为维持内心的原则与底线，比获取短期的现实收益更为重要。",
+        quote_low: "《管子》言：仓廪实而知礼节。",
+        desc_low: "你深刻理解生存的逻辑。在资源分配中，你优先关注实质利益的获取与实力的保全。你认为夯实物质基础与生存空间，是实现一切理念的前提。"
+    },
+    {
+        name: "礼", 
+        quote_high: "《论语》言：礼之用，和为贵。", 
+        desc_high: "你认同秩序与规范的力量。你懂得通过适当的仪式、规矩与谦让来降低人际摩擦。你倾向于在既有的框架内寻求共识，维护系统的平稳运行。",
+        quote_low: "《庄子》倡：越名教而任自然。",
+        desc_low: "你追求本真，不喜受制于外在的形式。你倾向于直击问题的核心，认为繁琐的规矩和等级观念往往是效率的阻碍，行事风格更为灵活务实。"
+    },
+    {
+        name: "智", 
+        quote_high: "《中庸》言：莫见乎隐，莫显乎微。", 
+        desc_high: "你倾向于在复杂环境中守住本心。你认为真正的智慧不是战术上的精明算计，而是在纷扰中明辨大是大非，顺应长远的正道演化。",
+        quote_low: "《韩非子》重法、术、势。",
+        desc_low: "你注重逻辑与策略。你善于洞察局势的微小变化与人性的规律，倾向于通过精确的谋划和手段来掌控局面，以确保目标的达成。"
+    },
+    {
+        name: "信", 
+        quote_high: "《中庸》言：诚者，天之道也。", 
+        desc_high: "你重视契约精神与内在的真实。你认为承诺一旦作出便应尽力履行，言行一致不仅是对他人的交代，更是确立自身社会信誉的基石。",
+        quote_low: "《孙子》言：兵无常势，水无常形。",
+        desc_low: "你深谙通权达变之理。面对不断变化的客观环境，你认为死守初衷可能导致刻舟求剑。你倾向于根据当下的实际情况灵活调整策略与立场。"
+    }
+];
+
+const archetypes = {
+    "00000": { name: "乱世枭雄", tags: "破礼·精算·权变", slogan: "宁教我负天下人，休教天下人负我。", desc: "你洞悉社会运转的现实逻辑，不受常规约束。为达成战略目的或确保存续，你能够极其灵活地调整原则，是复杂局势中极具韧性的破局者。", 
+        figures: [
+            {name: "曹操", bio: "打破道德门槛，唯才是举。以极致的实用主义奠定魏国霸业基础。"},
+            {name: "司马懿", bio: "深谙隐忍与权变。在漫长的政治倾轧中以务实手段保全自身，最终获取政权。"}
+        ] },
+    "00001": { name: "草莽豪强", tags: "破礼·精算·守信", slogan: "重诺轻生，快意江湖。", desc: "你游离于繁文缛节之外，依靠实际利益交换建立权威。你作风务实且重承诺，能在特定的民间或地方网络中获得坚实的拥趸。", 
+        figures: [
+            {name: "郭解", bio: "汉代游侠典型。无视官方律法，但在民间以重信守诺维持庞大的社会网络。"},
+            {name: "彭越", bio: "务实的游击统帅。注重实际利益，但对部属和同盟有基本的信用底线。"}
+        ] },
+    "00010": { name: "权谋智囊", tags: "破礼·藏拙·权变", slogan: "算无遗策，明哲保身。", desc: "你敏锐察觉风险与机会，具备高超的策略头脑但不轻易展露锋芒。行事以保全实力为优先，计谋往往直指核心且注重实际效能。", 
+        figures: [
+            {name: "贾诩", bio: "洞察人性弱点，计谋一针见血，在乱世中以极高的智慧明哲保身。"},
+            {name: "陈平", bio: "行事不拘小节，屡出奇计化解汉初面临的政治与军事危机。"}
+        ] },
+    "00011": { name: "方外奇士", tags: "破礼·藏拙·守信", slogan: "超然物外，独善其身。", desc: "你拥有专精技能或独到见解，拒绝被体制深度绑定。对自身技艺有职业操守，常以疏离的姿态立于世俗之中，保持独立。", 
+        figures: [
+            {name: "华佗", bio: "专注医学规律，拒绝被宫廷权力深度绑定，行事保持绝对独立。"},
+            {name: "东方朔", bio: "以诙谐荒诞的姿态立于汉武帝朝堂，以大智若愚的方式避祸保身。"}
+        ] },
+    "00100": { name: "经制权臣", tags: "守礼·精算·权变", slogan: "借礼法之名，行夺权之实。", desc: "你深谙体制运作的规律，善于将现有的规则作为控制局面的工具。步步为营，在合乎程序的框架内完成实质性的资源整合。", 
+        figures: [
+            {name: "王莽", bio: "利用儒家复古思潮与禅让程序，在体制内完成权力的和平更迭。"},
+            {name: "霍光", bio: "恪守朝廷礼仪框架，但对中枢权力的把控与调度极为严密。"}
+        ] },
+    "00101": { name: "能吏干臣", tags: "守礼·精算·守信", slogan: "精明强干，维持纲纪。", desc: "你是组织中高效运转的枢纽。办事精明，严格遵循契约与指令，对实际的行政与管理绩效负责，是维持系统平稳的基石。", 
+        figures: [
+            {name: "桑弘羊", bio: "主持盐铁官营，以专业的理财能力支撑汉武帝庞大的国家运转。"},
+            {name: "曹参", bio: "萧规曹随的践行者，以清静无为的理念维持汉初官僚系统的平稳。"}
+        ] },
+    "00110": { name: "圆滑官僚", tags: "守礼·藏拙·权变", slogan: "和光同尘，历朝不倒。", desc: "你表面恭顺，实则顺应时势。深谙中庸之道，总能以柔和的姿态化解危机，在复杂的环境中确保自身与团队的长久延续。", 
+        figures: [
+            {name: "胡广", bio: "历经东汉多朝而不倒，以柔媚圆滑著称，被称为“万事不理问伯始”。"},
+            {name: "公孙弘", bio: "善于以儒学经典迎合君王意志，身居高位而能避险的汉代名臣。"}
+        ] },
+    "00111": { name: "守成老臣", tags: "守礼·藏拙·守信", slogan: "谨小慎微，不求有功。", desc: "你依靠对既有规则的服从和谨慎的行事风格来维持地位。虽缺乏激进的进取心，但能忠诚地维持局部的稳定与传统的延续。", 
+        figures: [
+            {name: "石奋", bio: "号万石君。汉初以恭敬谨慎著称，凭借严格家风和无过错作风保全家族。"}
+        ] },
+    "01000": { name: "孤注刺客", tags: "破礼·精算·权变", slogan: "风萧萧兮易水寒，壮士一去兮不复还。", desc: "为了特定目标，你甘愿舍弃常理。手段直接且极致，在具体的行动中展现出极高的执行力与不计代价的决断感。", 
+        figures: [
+            {name: "荆轲", bio: "试图以暗杀改变天下格局，谋划精密且视死如归。"},
+            {name: "要离", bio: "为完成刺杀任务，不惜采用自残等严酷手段以获取敌方信任。"}
+        ] },
+    "01001": { name: "刚烈游侠", tags: "破礼·精算·守信", slogan: "国士遇我，国士报之。", desc: "你将认同的恩义置于重要位置。遵循古典的报恩逻辑，一旦确认了彼此的契约，便会展现出极强的忠诚与行动力。", 
+        figures: [
+            {name: "豫让", bio: "漆身吞炭，矢志为主复仇，践行了古典游侠的信条。"},
+            {name: "季布", bio: "楚地游侠，一诺千金。面对汉朝通缉也能隐忍求存以待时机。"}
+        ] },
+    "01010": { name: "异端道首", tags: "破礼·藏拙·权变", slogan: "苍天已死，黄天当立。", desc: "你具有强烈的解构意识，能敏锐察觉底层的问题。试图利用非主流的思想打破现有的僵化秩序，是以破坏者姿态出现的革新者。", 
+        figures: [
+            {name: "张角", bio: "以极具煽动性的理念动员底层民众，冲击汉朝统治根基的宗教领袖。"}
+        ] },
+    "01011": { name: "孤傲死节", tags: "破礼·藏拙·守信", slogan: "宁为玉碎，不为瓦全。", desc: "你拒绝向不认同的秩序妥协。内心有着不可触碰的底线，在面临原则冲突时，宁可承受巨大损失也不愿苟且。", 
+        figures: [
+            {name: "田横", bio: "齐国贵族。兵败后带领五百壮士在海岛从容自刎，拒绝称臣。"},
+            {name: "屈原", bio: "楚国大夫。政治理想破灭且国家沦亡后，选择投江以身殉道。"}
+        ] },
+    "01100": { name: "铁腕法家", tags: "守礼·精算·权变", slogan: "法不阿贵，绳不挠曲。", desc: "你推崇规则的统一与组织的强盛。推行严厉的制度，为维护秩序的效能不避权贵，常因触碰既得利益而面临压力。", 
+        figures: [
+            {name: "商鞅", bio: "以冷酷的律法重塑社会结构，奠定秦国霸业，最终作法自毙。"},
+            {name: "晁错", bio: "主张削藩的政论家。为维护中央集权引火烧身，成为政治牺牲品。"}
+        ] },
+    "01101": { name: "铁面酷吏", tags: "守礼·精算·守信", slogan: "执法如山，六亲不认。", desc: "你是制度最坚定的执行者。严格按规定行事，用强硬的手段维护系统的运转，对设定的目标保有绝对的执行力。", 
+        figures: [
+            {name: "张汤", bio: "推行严法的汉代廷尉，忠于君权，用法苛刻。"},
+            {name: "郅都", bio: "执法不避权贵的酷吏，被当时的列侯宗室畏惧地称为“苍鹰”。"}
+        ] },
+    "01110": { name: "刻板卫道者", tags: "守礼·藏拙·权变", slogan: "抱残守缺，宁折不弯。", desc: "你抱有维持正统与原则的执念，但在具体操作中可能显现出偏执。常因固守既有观念，而难以适应局势的灵活多变。", 
+        figures: [
+            {name: "袁绍", bio: "恪守世家大族的政治传统，实力雄厚但难以适应乱世的灵活多变。"},
+            {name: "王允", bio: "谋诛董卓后过于执拗于朝廷威仪，缺乏变通，酿成更大祸患。"}
+        ] },
+    "01111": { name: "名教党人", tags: "守礼·藏拙·守信", slogan: "天下名教，用生命捍卫。", desc: "你高度认同并捍卫核心的价值规范。面对压力不屈不挠，用实际行动表明了对理想原则最坚韧的坚守。", 
+        figures: [
+            {name: "李膺", bio: "党锢之祸中的标志性人物，面对强权审讯从容不迫。"},
+            {name: "陈蕃", bio: "在反抗宦官专权的斗争中坚持原则，最终遇害的名士。"}
+        ] },
+    "10000": { name: "悲情良将", tags: "破礼·精算·权变", slogan: "出师未捷身先死，长使英雄泪满襟。", desc: "你具备卓越的才干且体恤团队，但因行事风格不迎合中枢常规，常感掣肘。你往往在责任与环境的夹缝中寻求突破。", 
+        figures: [
+            {name: "陆逊", bio: "保全东吴半壁江山，却因卷入政治斗争而忧愤而死。"},
+            {name: "李广", bio: "与士兵同甘共苦，但在正规化的军事体制中屡遭挫折的飞将军。"}
+        ] },
+    "10001": { name: "侠义豪杰", tags: "破礼·精算·守信", slogan: "傲上而不忍下，欺强而不凌弱。", desc: "你对弱势群体有共情。行事灵活且重情重义，在变局中能够依靠个人魅力与信誉建立起属于自己的基本盘。", 
+        figures: [
+            {name: "刘备", bio: "颠沛流离中始终保持仁厚之名，以信义结交天下豪杰。"},
+            {name: "关羽", bio: "傲上而不忍下，重诺守信，成为后世忠义精神的象征。"}
+        ] },
+    "10010": { name: "越名高士", tags: "破礼·藏拙·权变", slogan: "越名教而任自然。", desc: "你看透了形式主义的虚耗，具有悲悯感。常以疏离或隐退的姿态，掩饰内心的苦闷与对复杂环境的避险。", 
+        figures: [
+            {name: "阮籍", bio: "以醉酒避祸，作诗抒发内心的痛苦与对现实礼教的疏离。"},
+            {name: "陶渊明", bio: "不为五斗米折腰，辞官归隐，构建了传统文人理想的田园范式。"}
+        ] },
+    "10011": { name: "隐世智者", tags: "破礼·藏拙·守信", slogan: "洞若观火，不染尘埃。", desc: "你洞察大势但不愿过度卷入是非。坚守自身的专业阵地与清名，言出必行，是喧嚣中冷眼旁观的清醒者。", 
+        figures: [
+            {name: "司马徽", bio: "洞察时局的水镜先生。向刘备推荐人才，但自身坚决不涉入仕途。"},
+            {name: "庞德公", bio: "拒绝刘表延请，隐居隆中，保持了学者的绝对独立性。"}
+        ] },
+    "10100": { name: "济世良相", tags: "守礼·精算·权变", slogan: "调和鼎鼐，安抚黎元。", desc: "你具有较高的责任感与管理能力。懂得适时妥协，在体制内以宽和圆滑的手腕推动实际问题的解决，维持大局稳定。", 
+        figures: [
+            {name: "萧何", bio: "稳定后方，制定汉律，是汉朝建立与恢复社会生产的后勤基石。"},
+            {name: "谢安", bio: "在淝水之战中从容指挥，行事兼具名士风度与宰相器局。"}
+        ] },
+    "10101": { name: "治世贤臣", tags: "守礼·精算·守信", slogan: "大智若愚，稳如泰山。", desc: "你宽厚仁和，大局观强。行事周密且严格履约，不贪图个人风头，是稳固任何团队最可靠的核心力量。", 
+        figures: [
+            {name: "荀攸", bio: "曹魏谋主。算无遗策但为人低调，大智若愚。"},
+            {name: "鲁肃", bio: "一生致力于维护孙刘联盟，政治眼光深远且为人诚恳踏实。"}
+        ] },
+    "10110": { name: "守成之主", tags: "守礼·藏拙·权变", slogan: "保境安民，偏安一隅。", desc: "你讲求平和与规范。缺乏强烈的扩张野心，手段温和，优先考虑的是现有领地或业务的相对安定与平稳发展。", 
+        figures: [
+            {name: "刘表", bio: "在东汉末年的乱世中，维持了荆州长达二十年的相对安定和文化繁荣。"},
+            {name: "刘璋", bio: "暗弱仁慈，面对刘备的进攻最终选择投降，以保全成都百姓免遭战火。"}
+        ] },
+    "10111": { name: "太平大夫", tags: "守礼·藏拙·守信", slogan: "修身养性，文脉相传。", desc: "你在组织中安分守己，不主动争权夺利。深谙进退之道，多以专业学术或文化贡献积累声望，保持清朗的声誉。", 
+        figures: [
+            {name: "张华", bio: "博学多识，编纂《博物志》，在复杂的魏晋朝局中保持清名。"},
+            {name: "陈寿", bio: "在王朝更迭的政治环境下，以严谨的态度完成了史学巨著《三国志》。"}
+        ] },
+    "11000": { name: "孤胆英杰", tags: "破礼·精算·权变", slogan: "虽千万人，吾往矣。", desc: "你具有强烈的信念感与突出的行动力。无视常规阻碍，性格独立，常凭一己之力试图扭转不利局面，带有英雄主义色彩。", 
+        figures: [
+            {name: "班超", bio: "投笔从戎，长期孤守西域，展现出极强的个人英雄主义与定力。"},
+            {name: "魏延", bio: "忠诚于北伐大业，提出子午谷奇谋，但因性格孤傲最终酿成悲剧。"}
+        ] },
+    "11001": { name: "千古霸王", tags: "破礼·精算·守信", slogan: "力拔山兮气盖世。", desc: "你信奉自身的能力与个人信誉，不屑于复杂的算计。往往因为性格中的骄傲和对名誉的执着，在关键时刻不肯轻易妥协。", 
+        figures: [
+            {name: "项羽", bio: "破釜沉舟的军事天才。因无法接受失败，无颜面对江东父老而自刎乌江。"},
+            {name: "孙策", bio: "勇猛果敢，短时间内平定江东，但轻忽防御英年早逝。"}
+        ] },
+    "11010": { name: "清流名士", tags: "破礼·藏拙·权变", slogan: "广陵散绝，风骨长存。", desc: "你用强烈的批判态度对待不合理现象。内心要求纯粹，常常成为团队或特定时期内精神独立与不从众的象征。", 
+        figures: [
+            {name: "嵇康", bio: "拒绝与篡权的政权合作，临刑前弹奏广陵散，视死如归。"},
+            {name: "孔融", bio: "恃才傲物，因持续的政治批评触怒曹操而惨遭灭门。"}
+        ] },
+    "11011": { name: "殉道高隐", tags: "破礼·藏拙·守信", slogan: "割席断交，不食周粟。", desc: "你在复杂环境中保持着极高的道德纯洁性。拒绝随波逐流，用克制与淡泊坚守了内心的精神契约。", 
+        figures: [
+            {name: "管宁", bio: "割席断交，避居辽东数十年，面对曹魏多次高官征召均坚辞不受。"},
+            {name: "伯夷", bio: "商周之际的隐士。叩马而谏，不食周粟，饿死首阳山。"}
+        ] },
+    "11100": { name: "悲情贤相", tags: "守礼·精算·权变", slogan: "鞠躬尽瘁，死而后已。", desc: "你肩负着组织的重任。为了维持运转与理念，明知困难重重依然耗尽心血，是传统责任感的最高典范。", 
+        figures: [
+            {name: "诸葛亮", bio: "晚年以一己之力支撑蜀汉。六出祁山，明知不可为而为之。"},
+            {name: "王猛", bio: "辅佐前秦苻坚建立霸业。积劳成疾，临终留下关乎国家存亡的战略遗言。"}
+        ] },
+    "11101": { name: "直言死谏", tags: "守礼·精算·守信", slogan: "文死谏，武死战。", desc: "你是规则与常态的捍卫者。以极高的忠诚度，在面临危机或决策失误时，敢于直言指出问题，甚至承担风险。", 
+        figures: [
+            {name: "伍子胥", bio: "看透敌国的长远威胁而反复直言进谏，最终被昏庸的君主逼迫自杀。"},
+            {name: "田丰", bio: "刚直犯上，因极力劝谏袁绍不要轻启官渡之战而下狱，兵败后被杀。"}
+        ] },
+    "11110": { name: "醇儒忠臣", tags: "守礼·藏拙·权变", slogan: "德高望重，随顺天命。", desc: "你是资深且广受尊重的成员。在剧变中不强求逆转局势，相对随和，但在面临大是大非时，仍能保持基本的底线。", 
+        figures: [
+            {name: "卢植", bio: "文武双全的海内大儒。在面对董卓废立皇帝时敢于当面抗争。"},
+            {name: "蔡邕", bio: "被董卓强行征召，董卓死后因感念知遇之恩叹息，遭王允下狱而死。"}
+        ] },
+    "11111": { name: "纯臣儒宗", tags: "守礼·藏拙·守信", slogan: "弘毅之士，死而后已。", desc: "你是核心价值规范的完美践行者。在展现卓越才华的同时，面对涉及根本原则的问题，会选择坚定地捍卫到底。", 
+        figures: [
+            {name: "荀彧", bio: "一生致力于辅佐汉室。最终因反对曹操篡汉称公而饮药，坚守了底线。"},
+            {name: "董仲舒", bio: "提出“罢黜百家”，为汉朝大一统构建了完整的思想与道德基础。"}
+        ] }
+};
+
+const questions = [
+    { text: "1. 某项新政推行受阻，部分民众怨言较大。你会：", dim: 0, opts: [
+        { t: "坚决推行。改革必有代价，应着眼长远大局而非一时得失。", v: 0 },
+        { t: "暂缓推进。先以利益引导，待时机与舆论成熟后再作图谋。", v: 0.33 },
+        { t: "调整细则。倾听底层反馈并做出妥协，试图减轻推行阻力。", v: 0.67 },
+        { t: "深刻反求。若严重脱离民意，说明决策失误，宁可停止推行。", v: 1 }
+    ]},
+    { text: "2. 面对一种你深信对他人绝对有益的生活理念，你会：", dim: 0, opts: [
+        { t: "强力推行。认为打破他人的认知局限是效率最高的负责方式。", v: 0 },
+        { t: "伺机引导。在掌握话语权时积极施加影响，促使对方改变。", v: 0.33 },
+        { t: "偶尔建议。点到为止，若对方不接受虽感遗憾但不强求。", v: 0.67 },
+        { t: "顺其自然。恪守边界，深知将自我意志强加于人即是不妥。", v: 1 }
+    ]},
+    { text: "3. 邻地饥荒灾民涌入，本处存粮有限。你的决断是：", dim: 0, opts: [
+        { t: "封锁边界。生存资源有限，优先保障本地运转是主政底线。", v: 0 },
+        { t: "适度遣返。仅在城外施舍少量口粮，防止灾民聚集生变。", v: 0.33 },
+        { t: "有限接纳。在不危及本地根本的前提下尽可能安置灾民。", v: 0.67 },
+        { t: "竭力赈济。削减本地冗余开支开仓放粮，视救命为首要。", v: 1 }
+    ]},
+    { text: "4. 规划一项耗费巨大但能造福数代人的宏大工程：", dim: 0, opts: [
+        { t: "聚焦结果。评价历史应看最终功业，理性接受当代的代价。", v: 0 },
+        { t: "保障进度。维持劳工基本运转，对艰苦的环境持宽容态度。", v: 0.33 },
+        { t: "改善待遇。若工程与民生严重冲突，会尝试拉长工期以缓解。", v: 0.67 },
+        { t: "坚守底线。若必须以摧残当代为代价，宁可修改宏伟蓝图。", v: 1 }
+    ]},
+
+    { text: "5. 曾恶意构陷过你的人，按正规流程向你主理的衙门提出诉求：", dim: 1, opts: [
+        { t: "直接驳回。恩怨分明，资源不应浪费在敌对者身上。", v: 0 },
+        { t: "权衡利弊。若其仍有潜在利用价值则办理，否则冷处理。", v: 0.33 },
+        { t: "合规拖延。表面按程序接收，但合法地将其置于最低优先级。", v: 0.67 },
+        { t: "秉公办理。剥离个人恩怨，按事件本身的合理性给予处置。", v: 1 }
+    ]},
+    { text: "6. 发现一个规则漏洞，利用它可安全获取巨额财富：", dim: 1, opts: [
+        { t: "果断利用。法无禁止即可为，获取资源以壮大自身是现实法则。", v: 0 },
+        { t: "谨慎试探。获取一小部分见好就收，避免引发未知的变数。", v: 0.33 },
+        { t: "最终放弃。内心有所挣扎，但选择对这个漏洞保持沉默。", v: 0.67 },
+        { t: "坚决抵制。不合公道的利益虽合法，却有损内心的原则。", v: 1 }
+    ]},
+    { text: "7. 审理一起因贫困抓药救家属，从而触犯盗窃律法的案件：", dim: 1, opts: [
+        { t: "严格重判。律法是维持秩序的基石，人情不能破坏法度。", v: 0 },
+        { t: "依法判罚。但私下暗示其家属可通过缴纳罚金等现实方式减轻。", v: 0.33 },
+        { t: "极力开脱。在定性上寻找借口，甚至扭曲法理以迎合社会同情。", v: 0.67 },
+        { t: "合宜裁断。在律法允许的裁量范围内从轻，甚至自掏腰包代其赔偿。", v: 1 }
+    ]},
+    { text: "8. 面对朝堂或社会上掌握绝对话语权，但明显偏离正道的狂热风气：", dim: 1, opts: [
+        { t: "顺势而为。调整立场积极参与，以此作为获取政治资本的契机。", v: 0 },
+        { t: "明哲保身。不做出头鸟，私下顺水推舟以迎合主流的走向。", v: 0.33 },
+        { t: "避居退隐。辞官或切断社交，但在强压下会做无奈妥协。", v: 0.67 },
+        { t: "坚守清明。不盲从附和，保持精神独立并在能力范围内指出偏颇。", v: 1 }
+    ]},
+
+    { text: "9. 面对社会地位和资源远不如你的人：", dim: 2, opts: [
+        { t: "强调层级。习惯指令式沟通，认为明确的上下级界限是效率所需。", v: 0 },
+        { t: "保持界限。交往中时刻把握分寸，不轻易跨越阶层间的距离。", v: 0.33 },
+        { t: "建立融洽。尽量平易近人，试图在等级架构内建立温和的氛围。", v: 0.67 },
+        { t: "尊重尊严。明白尊重是相互的，不因地位差异减损其人格。", v: 1 }
+    ]},
+    { text: "10. 在群体决策中，你与多数人的意见存在根本分歧：", dim: 2, opts: [
+        { t: "顺应主流。为了群体运转的效率或自身安稳，选择附和多数意见。", v: 0 },
+        { t: "保留退路。表面服从，但在执行中留下余地以防决策失败波及自身。", v: 0.33 },
+        { t: "坚持己见。不断试图说服众人，若不被采纳则拒绝参与后续执行。", v: 0.67 },
+        { t: "和而不同。平和表达异见，若决议已定且不违背底线，则尊重并配合。", v: 1 }
+    ]},
+    { text: "11. 上级决定将远超你实际贡献的丰厚荣誉单独赐予你：", dim: 2, opts: [
+        { t: "坦然接受。这是巩固地位的资源，组织内本就讲求实力与机遇。", v: 0 },
+        { t: "接受并分利。私下将部分利益分给同僚，以平息可能的不满。", v: 0.33 },
+        { t: "表面推辞。若上级再次坚持，便顺应安排接受这项荣誉。", v: 0.67 },
+        { t: "坚持辞让。如实陈述团队共同努力，深知名不副实将毁坏信任。", v: 1 }
+    ]},
+    { text: "12. 你如何看待传统的节庆礼俗与仪式规范？", dim: 2, opts: [
+        { t: "视作冗余。繁文缛节耗费资源，应以实用和效率为首要考量。", v: 0 },
+        { t: "功利看待。仅将其视为一种社交润滑剂或文化点缀，不求甚解。", v: 0.33 },
+        { t: "保持尊重。认为仪式能够凝聚人心，尽量维持其原有的规范。", v: 0.67 },
+        { t: "严守仪轨。外在仪式是内心敬畏的载体，不可轻率废弃或简化。", v: 1 }
+    ]},
+
+    { text: "13. 在绝对私密、无人监督的环境下，面对微小的违规便利：", dim: 3, opts: [
+        { t: "顺势获取。规则仅在外部监督下生效，私下无需过度拘束。", v: 0 },
+        { t: "风险评估。在确认绝对安全且无后患的前提下，适度变通。", v: 0.33 },
+        { t: "偶尔妥协。大多时候能守住底线，但在确信无害时会产生动摇。", v: 0.67 },
+        { t: "严以律己。深知道德基石在于敬畏微小，防线一旦溃退便难遏制。", v: 1 }
+    ]},
+    { text: "14. 面对当今舆论场中各种偏激、极端的言论与情绪：", dim: 3, opts: [
+        { t: "顺势借力。分析群体情绪的走向，并利用其推动自身的实际目标。", v: 0 },
+        { t: "动态观察。随舆论变化调整姿态，不轻易表露真实立场以求自保。", v: 0.33 },
+        { t: "独善其身。刻意保持疏离，将精力收归自身事务，不卷入无效争论。", v: 0.67 },
+        { t: "澄明心智。通过常识与逻辑进行独立判断，绝不盲从任何狂热叙事。", v: 1 }
+    ]},
+    { text: "15. 推行一项复杂的变革时，遭遇盘根错节的阻力：", dim: 3, opts: [
+        { t: "运用手腕。通过利益交换或分化瓦解来排除异己，以谋略达成目标。", v: 0 },
+        { t: "务实折中。削减预期目标，在各方利益间寻找平衡，优先维持稳定。", v: 0.33 },
+        { t: "稳守初衷。不轻易妥协，但放缓节奏，在夹缝中寻找合乎原则的空间。", v: 0.67 },
+        { t: "澄明大义。坚持正道直行，试图通过唤醒众人的公共认知来化解僵局。", v: 1 }
+    ]},
+    { text: "16. 面对一位能力极强，但缺乏基本道德底线的人才：", dim: 3, opts: [
+        { t: "大胆任用。才干和效率是首要的，道德瑕疵可通过严密制度去约束。", v: 0 },
+        { t: "限制性使用。将其置于可控岗位，在严密防备中榨取其核心价值。", v: 0.33 },
+        { t: "边缘化合作。仅在无关紧要的事务上有交集，对其人品保持长期观望。", v: 0.67 },
+        { t: "坚决拒用。没有良知驾驭的才干是险剑，能力越强对组织的破坏力越大。", v: 1 }
+    ]},
+
+    { text: "17. 工作中犯下只有自己知道的严重失误，且无暴露风险：", dim: 4, opts: [
+        { t: "保持沉默。在没有外部压力时自曝其短，是缺乏生存智慧的表现。", v: 0 },
+        { t: "私下弥补。试图在无人察觉的情况下解决问题，将损失降到最低。", v: 0.33 },
+        { t: "犹豫不决。内心备受煎熬，想坦白却因恐惧后果而将决定交给时间。", v: 0.67 },
+        { t: "坦诚相告。向相关方坦白并承担责任，认为内心的坦荡重于外在安全。", v: 1 }
+    ]},
+    { text: "18. 在公开场合表达了某种理念或批评后，在日常生活中：", dim: 4, opts: [
+        { t: "场域分离。公开发言是社交策略，私下行事则完全遵循利益最大化。", v: 0 },
+        { t: "适度变通。只要不损害大局或不被拆穿，偶尔的言行不一可以接受。", v: 0.33 },
+        { t: "心理代偿。违背理念时会感到不安，试图通过其他行为来减轻负罪感。", v: 0.67 },
+        { t: "知行合一。私生活中依然严格践行公开理念，保持内在价值的绝对真实。", v: 1 }
+    ]},
+    { text: "19. 达成了口头约定后客观环境剧变，继续履约将遭受较大损失：", dim: 4, opts: [
+        { t: "及时止损。在变局中死守契约是迂腐，迅速调整决策才是生存铁律。", v: 0 },
+        { t: "重新博弈。利用约定的模糊地带，迫使对方修改条件，分摊自身损失。", v: 0.33 },
+        { t: "消极应对。希望对方主动提出解除，若对方坚持履约则尽量拖延。", v: 0.67 },
+        { t: "信守承诺。坦诚沟通困难，若对方不同意更改，宁可承担损失也坚持履约。", v: 1 }
+    ]},
+    { text: "20. 面对初次打交道且缺乏背景了解的合作者，你的初始态度是：", dim: 4, opts: [
+        { t: "预设防备。在未建立起实质的利益制约机制前，处处设防不交实底。", v: 0 },
+        { t: "动态试探。在表面融洽中进行双向试探，逐步获取交往的主导权。", v: 0.33 },
+        { t: "谨慎试错。给予对方基础的信任，但在合作中随时准备抽身止损。", v: 0.67 },
+        { t: "抱持诚意。以基本的善意开启交往，不预设恶意，用真实的姿态建立互信。", v: 1 }
+    ]}
+];
+
+
+
+// ！！！请将下面这段代码粘贴在这里 ！！！
+// 全局随机打乱每个题目的选项顺序
+questions.forEach(q => {
+    for (let i = q.opts.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [q.opts[i], q.opts[j]] = [q.opts[j], q.opts[i]];
+    }
+});
+// ！！！粘贴结束 ！！！
+
+let currentQ = 0;
+let scores = [0, 0, 0, 0, 0];
+let historyStack = []; 
+
+function startTest() {
+    document.getElementById('page-intro').style.display = 'none';
+    document.getElementById('page-test').style.display = 'flex';
+    currentQ = 0; scores = [0,0,0,0,0]; historyStack = [];
+    renderQ();
+}
+
+function renderQ() {
+    const q = questions[currentQ];
+    
+    document.getElementById('progress-bar').style.width = ((currentQ + 1) / 20 * 100) + '%';
+    document.getElementById('q-counter').innerText = (currentQ + 1).toString().padStart(2,'0') + " / 20";
+    document.getElementById('q-dim-label').innerText = `【 ${dimLabels[q.dim]} 】`;
+
+    const qBox = document.getElementById('q-box');
+    qBox.classList.remove('slide-up');
+    void qBox.offsetWidth; 
+    qBox.classList.add('slide-up');
+
+    document.getElementById('q-text').innerText = q.text;
+    const optList = document.getElementById('opt-list');
+    optList.innerHTML = '';
+    
+    q.opts.forEach((opt, idx) => {
+        const prefix = String.fromCharCode(65 + idx) + ".";
+        const btn = document.createElement('div');
+        btn.className = 'opt-btn';
+        btn.innerHTML = `<span class="opt-prefix">${prefix}</span> <span>${opt.t}</span>`;
+        btn.onclick = () => handleAnswer(q.dim, opt.v);
+        optList.appendChild(btn);
+    });
+
+    document.getElementById('btn-back').style.display = currentQ === 0 ? 'none' : 'block';
+}
+
+function handleAnswer(dim, val) {
+    historyStack.push({ dim: dim, val: val });
+    scores[dim] += val;
+
+    if (currentQ < 19) {
+        currentQ++;
+        setTimeout(renderQ, 150);
+    } else {
+        showLoading();
+    }
+}
+
+function prevQ() {
+    if (currentQ > 0 && historyStack.length > 0) {
+        const last = historyStack.pop();
+        scores[last.dim] -= last.val;
+        currentQ--;
+        renderQ();
+    }
+}
+
+function showLoading() {
+    document.getElementById('page-test').style.display = 'none';
+    document.getElementById('page-loading').style.display = 'flex';
+    setTimeout(calcResult, 2000);
+}
+
+function calcResult() {
+    let binaryCode = "";
+    for(let i=0; i<5; i++) {
+        binaryCode += scores[i] > 2 ? "1" : "0";
+    }
+
+    const res = archetypes[binaryCode];
+    if(!res) {
+        alert("推演未果，请重试"); 
+        location.reload();
+        return;
+    }
+    renderResult(res, scores);
+}
+
+function renderResult(res, finalScores) {
+    document.getElementById('page-loading').style.display = 'none';
+    document.getElementById('page-result').style.display = 'block';
+
+    document.getElementById('res-name').innerText = res.name;
+    document.getElementById('res-archetype-tags').innerText = res.tags;
+    document.getElementById('res-slogan').innerText = `“ ${res.slogan} ”`;
+    document.getElementById('res-desc').innerText = res.desc;
+    
+    let figuresHtml = '';
+    res.figures.forEach(f => {
+        figuresHtml += `<div class="figure-item"><span class="figure-name">${f.name}</span><span class="figure-bio">${f.bio}</span></div>`;
+    });
+    document.getElementById('res-lore-box').innerHTML = `<div class="lore-title">历史掠影</div>${figuresHtml}`;
+
+    setTimeout(() => { drawRadar(finalScores); }, 100);
+
+    const wcContainer = document.getElementById('wuchang-container');
+    wcContainer.innerHTML = '';
+    
+    for(let i=0; i<5; i++) {
+        const scoreRatio = finalScores[i] / 4; 
+        const isHigh = scoreRatio > 0.5;
+        const textData = wuchangTexts[i];
+        
+        const quote = isHigh ? textData.quote_high : textData.quote_low;
+        const desc = isHigh ? textData.desc_high : textData.desc_low;
+        
+        const itemHtml = `
+            <div class="wuchang-item">
+                <div class="wc-head">
+                    <span class="wc-name">${textData.name}</span>
+                    <div class="wc-bar-bg"><div class="wc-bar-fill" style="width: ${scoreRatio * 100}%"></div></div>
+                </div>
+                <div class="wc-quote">${quote}</div>
+                <div class="wc-desc">${desc}</div>
+            </div>
+        `;
+        wcContainer.innerHTML += itemHtml;
+    }
+}
+
+function drawRadar(rawScores) {
+    const canvas = document.getElementById('radarChart');
+    const ctx = canvas.getContext('2d');
+    const dpr = window.devicePixelRatio || 1;
+    const w = canvas.clientWidth;
+    const h = canvas.clientHeight;
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
+    ctx.scale(dpr, dpr);
+
+    const cx = w / 2;
+    const cy = h / 2 + 10;
+    const r = Math.min(w, h) / 3.2;
+    const sides = 5;
+
+    const values = rawScores.map(s => s / 4); 
+
+    ctx.strokeStyle = '#c4bcac';
+    ctx.lineWidth = 1;
+    for(let i=1; i<=4; i++) {
+        ctx.beginPath();
+        for(let j=0; j<sides; j++) {
+            const angle = (Math.PI*2/sides)*j - Math.PI/2;
+            const radius = (r/4)*i;
+            if(j==0) ctx.moveTo(cx + Math.cos(angle)*radius, cy + Math.sin(angle)*radius);
+            else ctx.lineTo(cx + Math.cos(angle)*radius, cy + Math.sin(angle)*radius);
+        }
+        ctx.closePath();
+        ctx.stroke();
+    }
+
+    ctx.beginPath();
+    for(let j=0; j<sides; j++) {
+        const angle = (Math.PI*2/sides)*j - Math.PI/2;
+        let val = values[j]; 
+        val = 0.15 + val * 0.85; 
+        ctx.lineTo(cx + Math.cos(angle)*r*val, cy + Math.sin(angle)*r*val);
+    }
+    ctx.closePath();
+    ctx.fillStyle = 'rgba(130, 28, 28, 0.4)';
+    ctx.fill();
+    ctx.strokeStyle = '#821c1c';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    ctx.fillStyle = '#111111';
+    ctx.font = 'bold 16px serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    
+    for(let j=0; j<sides; j++) {
+        const angle = (Math.PI*2/sides)*j - Math.PI/2;
+        const dist = r + 28;
+        ctx.fillText(dimNames[j], cx + Math.cos(angle)*dist, cy + Math.sin(angle)*dist);
+    }
+}
+</script>
+
+<!-- 
+  =======================================================
+  🔒 网页防伪提示锁 (米大师定制版) - 移动端完美适配版
+  使用说明：
+  1. 修改 MAX_USES 为限制的次数（默认6次）。
+  2. 将代码粘贴到网页文件的 </body> 标签之前。
+  =======================================================
+-->
+
+<style>
+    /* 锁屏界面样式 */
+    #gate-modal {
+        position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+        background: #ffffff;
+        z-index: 2147483647;
+        display: flex; flex-direction: column; 
+        /* 【修复 1】移除 justify-content: center; 改为允许垂直滚动 */
+        overflow-y: auto; 
+        padding: 40px 20px; /* 增加上下 padding 防止贴边 */
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+        transition: opacity 0.5s;
+    }
+    
+    .gate-card {
+        background: #fff; width: 100%; max-width: 340px; padding: 40px 30px;
+        border-radius: 24px; 
+        box-shadow: 0 15px 50px rgba(0,0,0,0.08); text-align: center;
+        border: 1px solid #fff5f7; 
+        /* 【修复 2】使用 margin: auto 进行安全的垂直居中。屏幕太小时会自动顶对齐并允许滚动 */
+        margin: auto;
+        position: relative;
+        overflow: hidden;
+        /* 【修复 3】严格控制盒模型，防止 padding 撑破容器 */
+        box-sizing: border-box; 
+    }
+    
+    /* 视图切换容器 */
+    .view-container {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        animation: fadeIn 0.4s ease;
+        width: 100%;
+    }
+    .view-container.active {
+        display: flex;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* 头像样式 */
+    .avatar-wrapper {
+        width: 80px; height: 80px;
+        background: #ffe6eb; 
+        border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        margin: 0 auto 12px;
+        font-size: 42px;
+        border: 3px solid #fff;
+        box-shadow: 0 4px 15px rgba(255, 36, 66, 0.15);
+    }
+
+    .brand-tag {
+        display: inline-block;
+        background: #f8f8f8;
+        color: #999;
+        font-size: 11px;
+        padding: 4px 12px;
+        border-radius: 20px;
+        margin-bottom: 20px;
+        letter-spacing: 0.5px;
+    }
+    
+    .gate-title { font-size: 20px; font-weight: 800; color: #333; margin-bottom: 12px; line-height: 1.4; }
+    
+    .gate-desc { 
+        font-size: 14px; color: #666; margin-bottom: 25px; 
+        line-height: 1.6; 
+    }
+
+    /* 按钮样式 */
+    .action-btn {
+        width: 100%; padding: 15px; border-radius: 50px; 
+        font-size: 15px; font-weight: bold; cursor: pointer; 
+        transition: all 0.2s; margin-bottom: 12px;
+        border: none; outline: none;
+        /* 【修复 4】确保按钮自身尺寸计算包含 padding */
+        box-sizing: border-box;
+        display: flex; align-items: center; justify-content: center; flex-wrap: wrap;
+        line-height: 1.4;
+    }
+    .action-btn:active { transform: scale(0.98); }
+
+    .btn-primary {
+        background: linear-gradient(90deg, #ff2442, #ff5e75);
+        color: white; 
+        box-shadow: 0 4px 15px rgba(255, 36, 66, 0.3);
+    }
+    .btn-secondary {
+        background: #f5f5f5;
+        color: #666;
+    }
+    .btn-secondary:hover { background: #eeeeee; }
+
+    .gate-err { 
+        color: #ff2442; font-size: 13px; margin-top: 5px; height: 18px; 
+        opacity: 0; transition: opacity 0.3s; font-weight: 600; 
+    }
+    
+    .loading-layer {
+        position: absolute; top:0; left:0; right:0; bottom:0; background:rgba(255,255,255,0.98);
+        display: none; flex-direction: column;
+        align-items: center; justify-content: center; z-index: 10;
+    }
+    .spinner {
+        width: 32px; height: 32px; border: 3px solid #ffe6eb;
+        border-top: 3px solid #ff2442; border-radius: 50%;
+        animation: spin 1s linear infinite; margin-bottom: 15px;
+    }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+</style>
+
+<div id="gate-modal">
+    <div class="gate-card" id="main-card">
+        
+        <!-- ================= 视图1：防伪提问 ================= -->
+        <div class="view-container active" id="view-question">
+            <div class="avatar-wrapper" style="background: #f0f7ff; box-shadow: 0 4px 15px rgba(36, 131, 255, 0.15);">🐱</div>
+            <div class="gate-title">温馨提示</div>
+            <div class="gate-desc" style="color: #333; font-weight: 500;">
+                为了保障您的体验<br>请问您购买本测试的店铺是<br><span style="color:#ff2442; font-weight:bold; font-size:16px;">“心理米大师的店”</span> 吗？
+            </div>
+            
+            <button class="action-btn btn-primary" onclick="switchView('view-cover')">
+                对，确认无误，就是<span style="font-size: 18px; font-weight: 900; color: #ffe895; text-shadow: 0 1px 3px rgba(0,0,0,0.2); margin-left: 4px;">心理米大师</span>
+            </button>
+            <button class="action-btn btn-secondary" onclick="switchView('view-warning')">
+                好像不是，可能是别的店铺
+            </button>
+        </div>
+
+        <!-- ================= 视图2：正版欢迎页 ================= -->
+        <div class="view-container" id="view-cover">
+            <div class="avatar-wrapper">😻</div>
+            <div class="gate-title">米大师的私密测试空间</div>
+            <div class="brand-tag">@心理米大师 · 专注高质量心理测试</div>
+            
+            <div class="gate-desc">
+                Hi 宝子 👋<br>
+                <strong style="color:#ff2442;">请认准心理米大师</strong><br>
+                小店所有测试都是本人亲自制作<br>
+                欢迎宝子们进店选购 ✨
+            </div>
+            
+            <button class="action-btn btn-primary" onclick="unlockPage()">✨ 开启专属测试 ✨</button>
+            <div class="gate-err" id="gate-msg"></div>
+            
+            <!-- 剩余次数提示 -->
+            <div style="margin-top:10px; font-size:11px; color:#bbb;" id="limit-hint"></div>
+        </div>
+
+        <!-- ================= 视图3：盗版提示页 ================= -->
+        <div class="view-container" id="view-warning">
+            <div class="avatar-wrapper" style="background: #fff0f0;">😿</div>
+            <div class="gate-title">好像遇到盗版了...</div>
+            
+            <div class="gate-desc" style="text-align: left;">
+                麻烦宝子仔细确认一下，如果店铺名称确实不叫<strong style="color:#ff2442;">心理米大师</strong>，麻烦您帮我举报一下哦！<br><br>
+                如果可以私信告诉我，那就更好啦，非常感谢你的支持和正义感 ❤️
+            </div>
+            
+            <button class="action-btn btn-secondary" onclick="switchView('view-question')">返回重新选择</button>
+        </div>
+
+        <!-- 动画层 -->
+        <div class="loading-layer" id="load-layer">
+            <div class="spinner"></div>
+            <div style="font-size:13px; color:#333; font-weight:bold;" id="load-text">正在加载...</div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    // ================= 配置区域 =================
+    const MAX_USES = 10;                // 同一台设备限制的次数
+    // ==========================================
+
+    const pageId = window.location.pathname; // 区分不同页面的缓存
+    const usageKey = 'usage_count_' + pageId; // 本地存储Key
+
+    // 1. 检查Session（本次会话是否已解锁）
+    if (sessionStorage.getItem('unlocked_' + pageId)) {
+        document.getElementById('gate-modal').style.display = 'none';
+    }
+
+    // 2. 初始化显示剩余次数
+    function updateLimitUI() {
+        let currentUsage = parseInt(localStorage.getItem(usageKey) || '0');
+        let remaining = Math.max(0, MAX_USES - currentUsage);
+        document.getElementById('limit-hint').innerText = `本设备剩余可用次数：${remaining}次`;
+    }
+    updateLimitUI();
+
+    // 3. 切换视图功能
+    function switchView(viewId) {
+        document.querySelectorAll('.view-container').forEach(el => el.classList.remove('active'));
+        document.getElementById(viewId).classList.add('active');
+    }
+
+    // 4. 解锁页面功能
+    function unlockPage() {
+        const msg = document.getElementById('gate-msg');
+        let usedCount = parseInt(localStorage.getItem(usageKey) || '0');
+        
+        // 检查次数
+        if (usedCount >= MAX_USES) {
+            msg.innerText = `宝子，本设备的测试次数已用完啦 (${MAX_USES}/${MAX_USES})`;
+            msg.style.opacity = 1;
+            shakeCard();
+            return;
+        }
+
+        // --- 验证通过 ---
+        msg.style.opacity = 0;
+        
+        // 1. 扣除次数
+        localStorage.setItem(usageKey, usedCount + 1);
+        
+        // 2. 播放动画
+        document.getElementById('load-layer').style.display = 'flex';
+        const txt = document.getElementById('load-text');
+        
+        setTimeout(() => { txt.innerText = "正在加载专属报告..."; }, 800);
+        setTimeout(() => { 
+            let left = MAX_USES - (usedCount + 1);
+            txt.innerText = `加载成功！(剩余${left}次)`; 
+            txt.style.color = "#ff2442"; 
+        }, 1500);
+        
+        // 3. 解锁页面
+        setTimeout(() => {
+            sessionStorage.setItem('unlocked_' + pageId, 'true');
+            document.getElementById('gate-modal').style.opacity = 0;
+            setTimeout(() => { 
+                document.getElementById('gate-modal').style.display = 'none'; 
+            }, 500);
+        }, 2500);
+    }
+
+    // 震动动画
+    function shakeCard() {
+        const card = document.getElementById('main-card');
+        card.style.animation = 'shake 0.3s';
+        setTimeout(() => { card.style.animation = ''; }, 300);
+    }
+</script>
+</body>
+</html>
